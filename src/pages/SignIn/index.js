@@ -8,12 +8,12 @@ export default function Signin() {
  const navigation = useNavigation()
  const [email,setEmail] = useState('')
  const [password,setPassword] = useState('')
- //const {signIn} = useContext(AuthContext)
+ const {signIn} = useContext(AuthContext)
  //const {user} = useContext(AuthContext)
 
 
  function handleLogin(){
-  //signIn(email,password)
+  signIn(email,password)
   //console.log(user.nome)
  }
 
