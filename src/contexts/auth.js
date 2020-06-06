@@ -8,6 +8,7 @@ export const AuthContext = createContext({})
 function AuthProvider({ children }){
     const [user,setUser] = useState(null);
     const [loading,setLoading] = useState(true)
+    const [loadingAuth,setLoadingAuth] = useState(false);
 
 
     useEffect(() => {
@@ -29,6 +30,9 @@ function AuthProvider({ children }){
 
 
     async function signIn(email,password){
+
+        setLoadingAuth(true);
+
         await firebase.auth().signInWithEmailAndPassword(email,password)
            .then(async (value) => {
                let uid = value.user.uid;
@@ -40,17 +44,22 @@ function AuthProvider({ children }){
                        email: value.user.email,
                    }
    
-                   setUser(data)
-                   storageUser(data)
+                   setUser(data);
+                   storageUser(data);
+                   setLoadingAuth(false);
                } )
            })
            .catch((error) => {
-               alert(error.code)
+               alert(error.code);
+               setLoadingAuth(false);
            })
     }
    
 
 async function signUp(email,password,nome){
+
+    setLoadingAuth(true);
+
     await firebase.auth().createUserWithEmailAndPassword(email,password)
                          .then(async (value) => {
                              let uid = value.user.uid
@@ -64,11 +73,13 @@ async function signUp(email,password,nome){
                                      nome:nome,
                                      email: value.user.email
                                  }
-                                 setUser(data)
-                                 storageUser(data)
+                                 setUser(data);
+                                 storageUser(data);
+                                 setLoadingAuth(false);
                              })
                          }).catch((error) => {
-                            alert(error.code)
+                            alert(error.code);
+                            setLoadingAuth(false);
                         })
   
  }
@@ -92,7 +103,7 @@ async function signOut(){
 
     return (
         <AuthContext.Provider
-            value={{signed: !!user,user,loading,signUp,signIn,signOut}}
+            value={{signed: !!user,user,loading,loadingAuth,signUp,signIn,signOut}}
         >
             {children}
 
